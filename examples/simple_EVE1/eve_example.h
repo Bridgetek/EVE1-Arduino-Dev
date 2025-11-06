@@ -43,7 +43,6 @@
 
 #include <stdint.h>
 
-#include <SPI.h>
 #include <Bridgetek_EVE1.h>
 
 /**
