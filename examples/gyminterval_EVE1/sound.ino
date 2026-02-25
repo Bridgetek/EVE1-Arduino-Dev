@@ -1,5 +1,5 @@
 /**
- @file simple_EVE1.ino
+ @file fonts.c
  */
 /*
  * ============================================================================
@@ -36,36 +36,78 @@
  * has no liability in relation to those amendments.
  * ============================================================================
  */
+#include <stdint.h>
+#include <stddef.h>
 
-#include "eve_example.h"
+#include <Bridgetek_EVE1.h>
 
 /**
- * @brief Functions used to store calibration data in file.
-   @details Currently not used.
+ @brief EVE library handle.
+ @details This is the one instance of the EVE library. Available as a global.
  */
-//@{
-int8_t platform_calib_init(void) {
-  return -1;
+extern Bridgetek_EVE1 eve;
+
+#include "sound.h"
+
+void enableSound(void)
+{
+	uint8_t regGpio;
+	uint8_t regGpioDir;
+
+	// Read GPIOX_DIR register
+	regGpioDir = eve.LIB_MemRead8(eve.REG_GPIO_DIR);
+	// Set bit 1 of GPIO_DIR register  to output (GPIO1)
+	regGpioDir = regGpioDir | 0x02;
+	// Enable GPIO2 as an output
+	eve.LIB_MemWrite8(eve.REG_GPIO_DIR, regGpioDir);
+
+	// Read REG_GPIOX
+	regGpio = eve.LIB_MemRead8(eve.REG_GPIO);
+	// Set bit 1 of GPIO register (GPIO1) high
+	regGpio = regGpio | 0x02;
+	// Enable the GPIO2 signal to the Audio Driver
+	eve.LIB_MemWrite8(eve.REG_GPIO, regGpio);
+
+	// Turn synthesizer volume up
+	eve.LIB_MemWrite8(eve.REG_VOL_SOUND, 255);
+	// Set synthesizer to mute
+	eve.LIB_MemWrite8(eve.REG_SOUND, 0x60);
+	// Play sound
+	eve.LIB_MemWrite8(eve.REG_PLAY, 1);
+
+
 }
 
-int8_t platform_calib_write(struct touchscreen_calibration *calib) {
-  (void)calib;
-  return 0;
+void playSound(uint8_t sound, uint8_t note)
+{
+	// set synthesizer to chime c#3
+	eve.LIB_MemWrite16(eve.REG_SOUND, (note << 8) | sound);
+	// play sound
+	eve.LIB_MemWrite8(eve.REG_PLAY, 1);
+
 }
 
-int8_t platform_calib_read(struct touchscreen_calibration *calib) {
-  (void)calib;
-  return -1;
-}
-//@}
-
-void setup() {
-  Serial.begin(9600);
+void playClick(void)
+{
+    playSound(SOUND_CLICK, 0);
 }
 
-void loop() {
-  // Initialise the display
-  Serial.print("Starting EVE...\n");
+void playChimes(uint8_t note)
+{
+    playSound(SOUND_CHIMES, note);
+}
 
-  eve_example();
+void playBell(uint8_t note)
+{
+    playSound(SOUND_BELL, note);
+}
+
+void playPip(uint8_t note)
+{
+    playSound(SOUND_1PIP, note);
+}
+
+void playClack(void)
+{
+    playSound(SOUND_CLACK, 0);
 }

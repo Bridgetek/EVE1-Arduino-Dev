@@ -4,7 +4,7 @@
 
 This library is to provide an API to control the Bridgetek FT800 and FT801 devices. It implements EVE API 1.
 
-The class name of the library is "Bridgetek_EVE1".
+The class name of the library is "Bridgetek_EVE1". This is version 1.1.2 of the Arduino Library.
 
 The library provides an Arduino IDE interface to the EVE embedded development library [EVE-MCU-Dev](https://github.com/Bridgetek/Eve-MCU-Dev).
 It is programmed in the same way with minor changes and ensures that code is easily transferrable.
@@ -258,7 +258,6 @@ void CMD_TOGGLE(int16_t x,  int16_t y,  int16_t w,  int16_t font,  uint16_t opti
 void CMD_TRACK(int16_t x,  int16_t y,  int16_t w,  int16_t h,  int16_t tag)
 void CMD_TRANSLATE(int32_t tx,  int32_t ty)
 
-
 void ALPHA_FUNC(uint8_t func,  uint8_t ref)
 void BEGIN(uint8_t prim)
 void BITMAP_HANDLE(uint8_t handle)
@@ -304,6 +303,7 @@ void TAG(uint8_t s)
 void TAG_MASK(uint8_t mask)
 void VERTEX2F(int16_t x,  int16_t y)
 void VERTEX2II(uint16_t x,  uint16_t y,  uint8_t handle, uint8_t cell)
+
 ```
 
 ### Library Public Variables
@@ -351,7 +351,6 @@ Therefore, taking `eve` as the name of the library class in a sketch, calling th
 ADC_DIFFERENTIAL
 ADC_SINGLE_ENDED
 ADPCM_SAMPLES
-API
 BEGIN_BITMAPS
 BEGIN_EDGE_STRIP_A
 BEGIN_EDGE_STRIP_B
@@ -415,7 +414,6 @@ RAM_CMD_SIZE
 RAM_DL
 RAM_DL_SIZE
 RAM_G
-RAM_G_SIZE
 RAM_PAL
 RAM_REG
 ROMFONT_FORMATS
@@ -447,6 +445,8 @@ ULAW_SAMPLES
 VOL_ZERO
 WRAP_BORDER
 WRAP_REPEAT
+
+API
 
 REG_ANALOG
 REG_CLOCK
@@ -583,9 +583,13 @@ void loop() {
 The examples in this library can be used to make a new Arduino IDE sketch.
 Complete example sketches added by this library can be found in "File -> Examples -> Bridgetek FT800 and FT801".
 
-The `simple_EVE1` example is an ideal sketch to start with as it shows many
+Available examples are:
+
+The [`simple_EVE1` example](examples/simple_EVE1) is an ideal sketch to start with as it shows many
 aspects of writing a sketch for Arduino. It provides exactly the same display, functions
 and result as the `simple` example in [EVE-MCU-Dev](https://github.com/Bridgetek/Eve-MCU-Dev) API.
+
+The [`gyminterval_EVE1` example](examples/gyminterval_EVE1) is a more complex example that animates countdown timers.
 
 ## Module Connections
 

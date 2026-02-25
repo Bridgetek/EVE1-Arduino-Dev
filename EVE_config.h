@@ -45,7 +45,7 @@
 #ifndef EVE_API
 #define EVE_API 1
 #ifndef EVE_SUB_API
-#define EVE_SUB_API
+#define EVE_SUB_API 
 #endif // EVE_SUB_API
 #endif // EVE_API
 

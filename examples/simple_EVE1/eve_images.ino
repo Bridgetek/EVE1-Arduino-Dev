@@ -39,16 +39,13 @@
 
 #include <stdint.h>
 #include <string.h>
+
 #include "eve_example.h"
 
 uint32_t eve_img_bridgetek_logo_width;
 uint32_t eve_img_bridgetek_logo_height;
 
-#ifdef __GNUC__
-static const uint8_t img_bridgetek_logo[] __attribute__((aligned(4))) =
-#else   // __GNUC__
-static const uint8_t img_bridgetek_logo[] =
-#endif  // __GNUC__
+constexpr PROGMEM static const uint8_t img_bridgetek_logo[] __attribute__((aligned(4))) =
   {
     /*000:*/ 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01,
     /*010:*/ 0x00, 0x01, 0x00, 0x00, 0xFF, 0xDB, 0x00, 0x43, 0x00, 0x03, 0x02, 0x02, 0x03, 0x02, 0x02, 0x03,
@@ -282,7 +279,7 @@ uint32_t eve_load_images(uint32_t start_addr) {
     uint8_t buf[128];
     uint32_t img_width = 0;
     uint32_t img_height = 0;
-    uint8_t *img = (uint8_t *)img_bridgetek_logo;
+    const uint8_t *img = (const uint8_t *)img_bridgetek_logo;
     int8_t flag;
     uint32_t eve_addr;
     unsigned int i;
@@ -296,7 +293,7 @@ uint32_t eve_load_images(uint32_t start_addr) {
     // as the data is received.
     while (flag != 2) {
         for (i = 0; i < sizeof(buf); i++) {
-            buf[i] = *img++;
+            buf[i] = pgm_read_byte(img++);
             if (buf[i] == 0xff) {
                 flag = 1;
             } else {

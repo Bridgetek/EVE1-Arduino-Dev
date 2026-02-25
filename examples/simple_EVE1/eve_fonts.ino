@@ -8,7 +8,7 @@
  *
  * This source code ("the Software") is provided by Bridgetek Pte Ltd
  * ("Bridgetek") subject to the licence terms set out
- * http://www.ftdichip.com/FTSourceCodeLicenceTerms.htm ("the Licence Terms").
+ * https://brtchip.com/wp-content/uploads/2021/11/BRT_Software_License_Agreement.pdf ("the Licence Terms").
  * You must read the Licence Terms before downloading or using the Software.
  * By installing or using the Software you agree to the Licence Terms. If you
  * do not agree to the Licence Terms then do not download or use the Software.
@@ -38,15 +38,12 @@
  */
 
 #include <stdint.h>
+
 #include "eve_example.h"
 
 const uint32_t font0_offset = 1000;  // Taken from commmand line
 
-#ifdef __GNUC__
-const uint8_t font0[] __attribute__((aligned(4))) =
-#else   // __GNUC__
-const uint8_t font0[] =
-#endif  // __GNUC__
+constexpr PROGMEM static const uint8_t font0[] __attribute__((aligned(4))) =
   /*10 characters have been converted */
 
   /* 148 Metric Block Begin +++  */
@@ -164,10 +161,29 @@ const uint8_t font0[] =
   };
 
 
+Bridgetek_EVE1::GPU_FONT_HEADER font0_header;
+const Bridgetek_EVE1::GPU_FONT_HEADER *font0_hdr = &font0_header;
+
 uint32_t eve_init_fonts(void) {
   const uint32_t font0_size = sizeof(font0);
 
-  eve.LIB_WriteDataToRAMG(font0, font0_size, font0_offset);
+  memcpy_P(&font0_header, font0, sizeof(font0_header));
+
+  /* Read the data from the program memory into RAM. */
+  uint8_t pgm[16];
+  uint32_t pgmoffset, pgmchunk;
+  for (pgmoffset = 0; pgmoffset < font0_size; pgmoffset+=16)
+  {
+    // Maximum of pgm buffer
+    uint32_t chunk = sizeof(pgm);
+    if (pgmoffset + chunk > font0_size)
+    {
+      chunk = font0_size - pgmoffset;
+    }
+    // Load the pgm buffer
+    memcpy_P(pgm, &font0[pgmoffset], chunk);
+    eve.LIB_WriteDataToRAMG(pgm, chunk, font0_offset + pgmoffset);
+  }
 
   eve.LIB_BeginCoProList();
   eve.CMD_DLSTART();

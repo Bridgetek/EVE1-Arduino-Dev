@@ -59,6 +59,16 @@ void Bridgetek_EVE1::setup(uint32_t panel)
 }
 
 
+uint16_t Bridgetek_EVE1::DISP_WIDTH(void)
+{
+    return EVE_DISP_WIDTH;
+}
+
+uint16_t Bridgetek_EVE1::DISP_HEIGHT(void)
+{
+    return EVE_DISP_HEIGHT;
+}
+
 void Bridgetek_EVE1::setpanel(uint32_t panel)
 {
     if (panel == QVGA)
